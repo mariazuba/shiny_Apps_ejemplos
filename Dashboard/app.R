@@ -9,49 +9,50 @@ library(DT)  # para incluir una tabla
 data1<-seq(1,10,1)
 data2<-seq(15,25,1)
 
-ui <- dashboardPage(
-    dashboardHeader(title = "CBA sardina común"),
-    
-    dashboardSidebar(
+ui <- dashboardPage( 
+      
+      dashboardHeader(title = "math4fish"),
+      dashboardSidebar(
         sidebarMenu(
-            menuItem("Criterios",tabName = "iris",icon=icon("fish")),
-                      menuSubItem("Escenarios Reclutamiento",tabName = "iris2"),
-            menuItem("Rpromedio bajo 1991-2007",tabName = "cars",icon=icon("fish"))
+            menuItem("Home",tabName = "home",icon=icon("fish")),
+            menuItem("About",tabName = "about",icon=icon("fish")),
+            menuItem("Simulaciones",tabName = "iris",icon=icon("fish")),
+                      menuSubItem("Series de tiempo",tabName = "iris2"),
+                      menuSubItem("plot area",tabName = "iris3"),
+                      menuSubItem("kobe plot",tabName = "iris4")
                 
       )
-    ),
+ ),
     dashboardBody(
+        
         tabItems(
-            
-        tabItem("iris"),
- 
-                tabItem("iris2",    
+                tabItem("home"),
+                tabItem("about"),
+                tabItem("iris",    
                        box(plotOutput("correlation_plot"),width=8),
-                       box(selectInput("features","Características:",
+                       box(selectInput("features","Selects Variables:",
                                 c("Sepal.Width",
                                   "Petal.Length",
-                                  "Petal.Width")),
-                           width = 4)
-                ),
-        
-        tabItem("cars",
-            fluidPage(
-            h1("CBA inicial"),
-            dataTableOutput("carstable"),
-            h1("Primera Revisión CBA")
-            ) # cierra fluidPage
-       ) # cierra tabItem cars
+                                  "Petal.Width")), width = 4)
+                       )
      ) # cierra tabItem iris 2
    ) # cierra dashboardBody
  ) # cierra dashboardPage
 
 
 
+
+
+
+
+
+
 server <- function(input, output) {
- output$correlation_plot <- renderPlot({
-     plot(iris$Sepal.Length,iris[[input$features]],
+  
+          output$correlation_plot <- renderPlot({
+          plot(0,0,
           xlab = "Sepal length", ylab="Feature")
- })
+          })
  
  percentil <- rep(0.2,7)
  CBA<-c(215013,214856,214709,214560,214413,214265,214117)
