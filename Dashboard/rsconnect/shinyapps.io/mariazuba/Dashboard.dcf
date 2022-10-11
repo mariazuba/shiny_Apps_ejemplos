@@ -5,9 +5,9 @@ account: mariazuba
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7260371
-bundleId: 6387340
+bundleId: 6391510
 url: https://mariazuba.shinyapps.io/Dashboard/
-when: 1665400028.16072
-lastSyncTime: 1665400028.16073
+when: 1665492849.16969
+lastSyncTime: 1665492849.1697
 asMultiple: FALSE
 asStatic: FALSE

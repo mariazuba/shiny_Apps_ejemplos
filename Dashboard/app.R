@@ -17,53 +17,71 @@ title <- tags$a(tags$img(src="LOGO_2SN_recortado.png",height='40',width ='95'))
 
 ui <- dashboardPage(skin = "black", 
       
-      dashboardHeader(title = title,titleWidth = 250),
+      dashboardHeader(
+                      title = title,titleWidth = 250
+                      ),
       
       dashboardSidebar(
            sidebarMenu(
-               menuItem("Home",tabName = "home",icon=icon("fish")),
+               menuItem("Home",tabName = "home",icon=icon("home")),
       
                menuItem("About",tabName = "about",icon=icon("fish")),
             
                menuItem("Simulaciones",tabName = "iris",icon=icon("fish"),startExpanded = F,
-                      menuSubItem("Stocks",tabName = "iris2"),
-                      menuSubItem("Fleets",tabName = "iris3"),
-                      menuSubItem("Fleets and stocks",tabName = "iris4"),
-                      menuSubItem("Summary",tabName = "iris5"),
-                      menuSubItem("Advice",tabName = "iris6"),selected = T)
+                      menuSubItem("Life History",tabName = "iris2"),
+                      menuSubItem("Rules Comparison",tabName = "iris3"),
+                      menuSubItem("OM Assumptions",tabName = "iris4")
+                      ,selected = T)
                       ) # cierra sidebarMenu()
                       ), # cierra dashboardSidebar()
       
       dashboardBody(
-        
         tabItems(
+      
+          #list(src = filename,width="100%",
+               #            align = "center",style="height: 350px")},
+               #            deleteFile = FALSE)
+      ########################################################################
+      # HOME
+      ########################################################################
             tabItem(
-                    tabName="home",
-                                   fluidRow(
-                                            box(
-                                                imageOutput("logo_proy"),
-                                                width=12,
-                                                )
-                                            ), # IMAGE TOO BIG AND BOX CANNOT COMPLETELY CONTAIN IT
+            tabName="home",
+                    fluidRow(
+                             box(
+                                 align="center",
+                                 HTML("<center><img src='stakeholders.png' width=80% height=80%></center>"),
+                                 HTML("</h2>"),
+                                 h1(textOutput("home_proy")),
+                                 HTML("</h2>"),
+                                 HTML("</h2>"),
+                                 HTML("<center><img src='https://math4fish.ieo.csic.es/wp-content/uploads/2022/09/Banners_Convenio-2048x357.png' width=80% height=80%></center>"),
+                                  width=12,
+                                )
+                             ), # IMAGE TOO BIG AND BOX CANNOT COMPLETELY CONTAIN IT
                     ),
+        ########################################################################
+        # ABOUT
+        ########################################################################
             tabItem(
                     tabName="about",
-                                    h2("Math4fish"),
-                                    textOutput("about_proy"),
+                    HTML("<center><img src='https://math4fish.ieo.csic.es/wp-content/uploads/2022/08/F4.jpeg' width=80% height=80%></center>"),
                                     h2("Caso estudio"),
-                                    textOutput("about_proy2")
+                                    h4(textOutput("about_proy2"))
                     ),
-            
+        ########################################################################
+        # SIMULATION
+        ########################################################################
             tabItem(
                     tabName="iris2",
-                                    tabBox(id="t1",width=12,height="600px",
+                          tabBox(id="t1",width=12,height="600px",
                                            
-                                    tabPanel("Time series",
-                                             "Time series plots show the evolution of indicators over time.
-                                              The indicator time series in each scenario is drawn with a different color.
-                                              Confidence intervals can also be added marking the corresponding option.  
-                                              Several indicator and stock, fleets or metiers (depending on the case) can
-                                              be selected simultaneously and they are plotted in different facets.",
+                          tabPanel("Calendar effect",
+                                   "Relative yields (catch/MSY) and biological risks (Risk3.Blim: maximum
+                                   probability of falling below Blim) by calendar type (ADVT, x-axis) and 
+                                   alternative operating models (in columns) The harvest control rules (HCRT) 
+                                   are represented by line types and uncertainty caps limits (UC) by line 
+                                   colours. See Table 1 in Sanchez et al. (2021) for definitions of abbreviations.
+                                   The horizontal black dashed line represents the 0.05 biological risk.",
                                              
                                               fluidRow(
                                       
@@ -180,31 +198,50 @@ ui <- dashboardPage(skin = "black",
                                     the unit circle, lines outside the circle represent values higher than in the base year 
                                     or scenario and those inside the circle represent lower values. The variables used to draw 
                                     lines and facets can be exchange, so lines can correspond with stock or fleets (depending 
-                                    on the case) and facets with indicators or the other way around."))),
+                                    on the case) and facets with indicators or the other way around."
+                                    ))),
            
             tabItem(tabName="iris3",
                     tabBox(id="t2",width=12,
-                           tabPanel("Time series","probando texto 1"),
-                           tabPanel("Area plot","probando texto 2"),
-                           tabPanel("Kobeplot","probando texto 3"),
-                           tabPanel("Spider","probando texto 4"))),
+                           tabPanel(
+                                   "Calendar effect",
+                                   h5("Relative yields (catch/MSY) and biological risks (Risk3.Blim: maximum
+                                    probability of falling below Blim) by calendar type (ADVT, x-axis) and 
+                                    alternative operating models (in columns) The harvest control rules (HCRT) 
+                                    are represented by line types and uncertainty caps limits (UC) by line 
+                                    colours. See Table 1 in Sanchez et al. (2021) for definitions of abbreviations.
+                                    The horizontal black dashed line represents the 0.05 biological risk.")
+                                   ),
+                           tabPanel("Trajectories",
+                                    "Trajectories of catch and SSB in tonnes along years (x-axis) for the 2-over-3
+                                    rule with a 20% uncertainty cap and under an in-year advice for different life
+                                    histories: stock-types in columns and historical exploitation levels in rows. 
+                                    The solid line represents the median and the shaded area the 90% confidence intervals 
+                                    computed from the 5th and 95th percentiles and coloured lines represent specific iterations. 
+                                    The dashed vertical line is located before year 31, which is the first year of the projection. 
+                                    The dashed horizontal lines represent the different reference points: the green 
+                                    line in catch plots correspond to MSY and orange and red lines in SSB plots to Blim 
+                                    (20% B0) and Bcollapse (10% B0), respectively."),
+                           
+                           tabPanel("Biological risks",
+                                    "probando texto 3"),
+                           
+                           tabPanel("Trajectories",
+                                    "probando texto 4"),
+                           
+                           tabPanel("Relative yields",
+                                    "probando texto 4"),
+                           
+                           tabPanel("Risks vs Relative yields",
+                                    "probando texto 4"),
+                           
+                           tabPanel("Biomass safeguards",
+                                    "probando texto 4"),
+                           
+                           )),
             
             tabItem(tabName="iris4",
                     tabBox(id="t3",width=12,
-                           tabPanel("Time series","probando texto 1"),
-                           tabPanel("Area plot","probando texto 2"),
-                           tabPanel("Kobeplot","probando texto 3"),
-                           tabPanel("Spider","probando texto 4"))),
-            
-            tabItem(tabName="iris5",
-                    tabBox(id="t4",width=12,
-                           tabPanel("Time series","First tab content"),
-                           tabPanel("Area plot","Tab content 2"),
-                           tabPanel("Kobeplot", "xxxx"),
-                           tabPanel("Spider","XXXXs"))),
-            
-            tabItem(tabName="iris6",
-                    tabBox(id="t5",width=12,
                            tabPanel("Time series","probando texto 1"),
                            tabPanel("Area plot","probando texto 2"),
                            tabPanel("Kobeplot","probando texto 3"),
@@ -215,28 +252,41 @@ ui <- dashboardPage(skin = "black",
  ) # cierra dashboardPage
 
 
-##################################################################################################
+################################################################################
 # SERVER
-##################################################################################################
+################################################################################
+
 server <- function(input, output) {
-          
+         
+         
+         ######################################################################
          # HOME 
-          output$logo_proy <- renderImage({
-                  filename <- normalizePath(file.path('www/LOGO_2SN_recortado.png'))
-                              list(src = filename,width="100%",
-                              align = "center",style="height: 250px")},
-                              deleteFile = FALSE)
+         ######################################################################
+         
+          output$home_proy<-renderText({
+            
+          "Management strategy evaluation framework to find the 
+          optimum harvest control rule in a co-creation process with stakeholders: 
+          Interactive shortcut approach with a general Ecosystem Toolbox for
+          European anchovy."  
+            
+            })
           
+         ###################################################################### 
          # ABOUT
-          output$about_proy<-renderText({"Management strategy evaluation framework to find the 
-            optimum harvest control rule in a co-creation process with stakeholders: Interactive
-            shortcut approach with a general Ecosystem Toolbox for European anchovy. Para más información visite la página web: https://math4fish.ieo.csic.es"  })
+         ######################################################################
           
+          output$about_proy2<-renderText ({
+            
+          "En esta aplicación se muestran los resultados para 
+           diferentes estrategias de gestión de las pesquerías xxx. 
+           El objetivo de las simulaciones es probar si .... "
+            
+            })
           
-          output$about_proy2<-renderText ({"En esta aplicación se muestran los resultados para 
-            diferentes estrategias de gestión de las pesquerías xxx. El objetivo de las simulaciones es probar si .... "})
-          
+         ######################################################################
          # SIMULACIONES
+         ######################################################################
           
           #---------------------------------------------------------------------
           # Tab Time series
