@@ -28,9 +28,11 @@ ui <- dashboardPage(skin = "black",
                menuItem("About",tabName = "about",icon=icon("fish")),
             
                menuItem("Simulaciones",tabName = "iris",icon=icon("fish"),startExpanded = F,
-                      menuSubItem("Life History",tabName = "iris2"),
-                      menuSubItem("Rules Comparison",tabName = "iris3"),
-                      menuSubItem("OM Assumptions",tabName = "iris4")
+                      menuSubItem("Stocks",tabName = "iris2"),
+                      menuSubItem("Fleets",tabName = "iris3"),
+                      menuSubItem("Fleets and stocks",tabName = "iris4"),
+                      menuSubItem("Summary",tabName = "iris5"),
+                      menuSubItem("Advice",tabName = "iris6")
                       ,selected = T)
                       ) # cierra sidebarMenu()
                       ), # cierra dashboardSidebar()
@@ -75,13 +77,8 @@ ui <- dashboardPage(skin = "black",
                     tabName="iris2",
                           tabBox(id="t1",width=12,height="600px",
                                            
-                          tabPanel("Calendar effect",
-                                   "Relative yields (catch/MSY) and biological risks (Risk3.Blim: maximum
-                                   probability of falling below Blim) by calendar type (ADVT, x-axis) and 
-                                   alternative operating models (in columns) The harvest control rules (HCRT) 
-                                   are represented by line types and uncertainty caps limits (UC) by line 
-                                   colours. See Table 1 in Sanchez et al. (2021) for definitions of abbreviations.
-                                   The horizontal black dashed line represents the 0.05 biological risk.",
+                          tabPanel("Time series",
+                                   "xxx",
                                              
                                               fluidRow(
                                       
@@ -118,10 +115,7 @@ ui <- dashboardPage(skin = "black",
                                       ),
                            
                            tabPanel("Area plot",
-                                    "Area plots show the composition, in median, of an specific indicator 
-                                    (catch, biomass...) over time. Each coloured area corresponds with one 
-                                    stock, fleet or metier (depending on the case). When several indicators
-                                    are selected simultaneously they are plotted in different facets.",
+                                    "",
                                     
                                     fluidRow(
                                       
@@ -204,40 +198,17 @@ ui <- dashboardPage(skin = "black",
             tabItem(tabName="iris3",
                     tabBox(id="t2",width=12,
                            tabPanel(
-                                   "Calendar effect",
-                                   h5("Relative yields (catch/MSY) and biological risks (Risk3.Blim: maximum
-                                    probability of falling below Blim) by calendar type (ADVT, x-axis) and 
-                                    alternative operating models (in columns) The harvest control rules (HCRT) 
-                                    are represented by line types and uncertainty caps limits (UC) by line 
-                                    colours. See Table 1 in Sanchez et al. (2021) for definitions of abbreviations.
-                                    The horizontal black dashed line represents the 0.05 biological risk.")
+                                   "Time series",
+                                   h5("xxx")
                                    ),
-                           tabPanel("Trajectories",
-                                    "Trajectories of catch and SSB in tonnes along years (x-axis) for the 2-over-3
-                                    rule with a 20% uncertainty cap and under an in-year advice for different life
-                                    histories: stock-types in columns and historical exploitation levels in rows. 
-                                    The solid line represents the median and the shaded area the 90% confidence intervals 
-                                    computed from the 5th and 95th percentiles and coloured lines represent specific iterations. 
-                                    The dashed vertical line is located before year 31, which is the first year of the projection. 
-                                    The dashed horizontal lines represent the different reference points: the green 
-                                    line in catch plots correspond to MSY and orange and red lines in SSB plots to Blim 
-                                    (20% B0) and Bcollapse (10% B0), respectively."),
+                           tabPanel("Area plot",
+                                    "xxx"),
                            
-                           tabPanel("Biological risks",
+                           tabPanel("Kobeplot",
                                     "probando texto 3"),
                            
-                           tabPanel("Trajectories",
+                           tabPanel("Spider",
                                     "probando texto 4"),
-                           
-                           tabPanel("Relative yields",
-                                    "probando texto 4"),
-                           
-                           tabPanel("Risks vs Relative yields",
-                                    "probando texto 4"),
-                           
-                           tabPanel("Biomass safeguards",
-                                    "probando texto 4"),
-                           
                            )),
             
             tabItem(tabName="iris4",
