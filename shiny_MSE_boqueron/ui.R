@@ -10,184 +10,226 @@ library(ggplot2)
 year  <- seq(2000,2030)
 nyear <- length(year)
 
-stock<-c("Anchovy 1","Anchovy 2","Anchovy 3")
-indicadores<-c("catch","rec","ssb","ft")
-strategias<-c("MO_1","MO_2","MO_3","HCR_1","HCR_2","HCR_3","HCR_4")
+stock<-c("Anch_1","Anch_2","Anch_3")
+indicadores<-c("Catch","Recl","Ssb","Ft")
+strategias<-c("MO_1","MO_2","MO_3")
 
 
 title <- tags$a(tags$img(src="LOGO_2SN_recortado.png",height='40',width ='95'))
 
 # Define UI for application that draws a histogram
-shinyUI(dashboardPage(skin = "black", 
-                      
-                      dashboardHeader(
-                        title = title,titleWidth = 250
-                      ),
-                      
-                      dashboardSidebar(
-                        sidebarMenu(
-                          menuItem("Home",tabName = "home",icon=icon("home")),
-                          
-                          menuItem("About",tabName = "about",icon=icon("fish")),
-                          
-                          menuItem("Simulaciones",tabName = "iris",icon=icon("fish"),startExpanded = F,
-                                   menuSubItem("Stocks",tabName = "iris2"),
-                                   menuSubItem("Fleets",tabName = "iris3"),
-                                   menuSubItem("Fleets and stocks",tabName = "iris4"),
-                                   menuSubItem("Summary",tabName = "iris5"),
-                                   menuSubItem("Advice",tabName = "iris6")
-                                   ,selected = T)
-                        ) # cierra sidebarMenu()
-                      ), # cierra dashboardSidebar()
-                      
-                      dashboardBody(
-                        tabItems(
-                          
-                          #list(src = filename,width="100%",
-                          #            align = "center",style="height: 350px")},
-                          #            deleteFile = FALSE)
-                          ########################################################################
-                          # HOME
-                          ########################################################################
-                          tabItem(
-                            tabName="home",
-                            fluidRow(
-                              box(
-                                align="center",
-                                HTML("<center><img src='stakeholders.png' width=80% height=80%></center>"),
-                                HTML("</h2>"),
-                                h1(textOutput("home_proy")),
-                                HTML("</h2>"),
-                                HTML("</h2>"),
-                                HTML("<center><img src='https://math4fish.ieo.csic.es/wp-content/uploads/2022/09/Banners_Convenio-2048x357.png' width=80% height=80%></center>"),
-                                width=12,
-                              )
-                            ), # IMAGE TOO BIG AND BOX CANNOT COMPLETELY CONTAIN IT
+shinyUI(
+  
+dashboardPage(
+  skin = "black", 
+  dashboardHeader(
+    title = title,titleWidth = 250
+    ), # cierra dashboardHeader
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("Home",tabName = "home",icon=icon("home")
+      ), # cierra menuItem
+      menuItem("About",tabName = "about",icon=icon("fish")
+      ), # cierra menuItem
+      menuItem("Simulaciones",tabName = "iris",icon=icon("fish"),startExpanded = F,
+         menuSubItem("Stocks",tabName = "iris2"),
+         menuSubItem("Fleets",tabName = "iris3"),
+         menuSubItem("Fleets and stocks",tabName = "iris4"),
+         menuSubItem("Summary",tabName = "iris5"),
+         menuSubItem("Advice",tabName = "iris6")
+         ,selected = T
+      ) # cierra menuItem
+    ) # cierra sidebarMenu()
+  ), # cierra dashboardSidebar()
+  dashboardBody(
+    tabItems(
+      #list(src = filename,width="100%",
+      #            align = "center",style="height: 350px")},
+      #            deleteFile = FALSE)
+ ########################################################################
+ # HOME
+ ########################################################################
+    tabItem(
+      tabName="home",
+      fluidRow(
+       box(
+        align="center",
+        HTML("<center><img src='stakeholders.png' width=80% height=80%></center>"),
+        HTML("</h2>"),
+        h1(textOutput("home_proy")),
+        HTML("</h2>"),
+        HTML("</h2>"),
+        HTML("<center><img src='https://math4fish.ieo.csic.es/wp-content/uploads/2022/09/Banners_Convenio-2048x357.png' width=80% height=80%></center>"),
+        width=12,
+        )  # cierra box
+      ), # cierra fluixRow
+    ), # cierra tabItem
+ ########################################################################
+ # ABOUT
+ ########################################################################
+    tabItem(
+      tabName="about",
+      HTML("<center><img src='https://math4fish.ieo.csic.es/wp-content/uploads/2022/08/F4.jpeg' width=80% height=80%></center>"),
+      h2("Caso estudio"),
+      h4(textOutput("about_proy2"))
+      ), # cierra tabItem
+ 
+ ########################################################################
+ # SIMULATION
+ ########################################################################
+    tabItem(
+      tabName="iris2",
+      tabBox(id="t1",
+             width=12,
+             height="600px",
+#-----------------
+# TIME SERIES   
+#-----------------
+      tabPanel("Time series",
+      "Descripción de la figura",
+        fluidRow(
+          #--------------------
+          # PANEL DE SELECCION
+          #--------------------
+          box( 
+           sliderInput("slider",
+                       h4("Years:"),
+                       min=min(year),
+                       max=max(year),
+                       value=c(min(year),max(year))
+                       ),
+           selectizeInput("features2",
+                          h4("Stock:"),
+                          levels(as.factor(stock)),
+                          selected=unique(stock)[1],
+                          multiple=T,
+                          options=list(plugins=list("remove_button","drag_drop"))
                           ),
-                          ########################################################################
-                          # ABOUT
-                          ########################################################################
-                          tabItem(
-                            tabName="about",
-                            HTML("<center><img src='https://math4fish.ieo.csic.es/wp-content/uploads/2022/08/F4.jpeg' width=80% height=80%></center>"),
-                            h2("Caso estudio"),
-                            h4(textOutput("about_proy2"))
+           selectizeInput("features3",
+                          h4("Indicators:"),
+                          levels(as.factor(indicadores)),
+                          selected=unique(indicadores)[1],
+                          multiple=T,
+                          options=list(plugins=list("remove_button","drag_drop"))
                           ),
-                          ########################################################################
-                          # SIMULATION
-                          ########################################################################
-                          tabItem(
-                            tabName="iris2",
-                            tabBox(id="t1",width=12,height="600px",
+           selectizeInput("features4",
+                          h4("Scenarios:"),
+                          levels(as.factor(strategias)),
+                          selected=unique(strategias)[1],
+                          multiple=T,
+                          options=list(plugins=list("remove_button","drag_drop"))
+                          ),             
+            width=4,
+            height="600px"
+            ), #cierra box
+          #--------------------
+          # FIGURA
+          #--------------------
+          box( 
+             plotOutput("timeserie",
+                        height = 650),
+             width=8,
+             height="600px"
+             ) #cierra box
+           ) # cierra fluixRow
+         ), # cierra tabPanel
+
+ #-----------------
+ # AREA PLOT   
+ #-----------------
+      tabPanel("Area plot",
+        "",
+        fluidRow(
+          #--------------------
+          # PANEL DE SELECCION
+          #--------------------
+          box(
+           sliderInput("slider",
+                      h4("Years:"),
+                      min=min(year),
+                      max=max(year),
+                      value=c(min(year),max(year))),
+           selectizeInput("features2",
+                         h4("Stock:"),
+                         levels(as.factor(stock)),
+                         selected=unique(stock)[1],
+                         multiple=T,
+                         options=list(plugins=list("remove_button","drag_drop"))
+                         ),
+           selectizeInput("features3",
+                         h4("Indicators:"),
+                         levels(as.factor(indicadores)),
+                         selected=unique(indicadores)[1],
+                         multiple=T,
+                         options=list(plugins=list("remove_button","drag_drop"))
+                         ),
+           selectizeInput("features4",
+                         h4("Scenarios:"),
+                         levels(as.factor(strategias)),
+                         selected=unique(strategias)[1],
+                         multiple=T,
+                         options=list(plugins=list("remove_button","drag_drop"))
+                         ),
+                         width=4
+             ), # cierra box
+          
+          #--------------------
+          # FIGURA
+          #--------------------         
+          box(
+           plotOutput("correlation_plot2"),
+           width=8
+            ) # cierra box
+          ) # cierra fluixRow
+        ), # cierra tabPanel
+#-----------------
+# KOBE PLOT
+#-----------------
+      tabPanel("Kobeplot",
+        "Kobe plots provide the trajectory of SSB and F pairs (in median) over time.
+        They divide the plot area in different quadrants defined by the ratio between SSB and F
+        and their corresponding MSY values. The green quadrant represents the area where the 
+        stock is sustainably exploited (SSB>Bmsy and F Bmsy and F>Fmsy), and the red the
+        area where the stock is over-exploited and over-fished (SSBFmsy).",
+        
+        fluidRow(
+          #--------------------
+          # PANEL DE SELECCION
+          #--------------------
+          box(
+             sliderInput("slider",
+                         h4("Years:"),
+                         min=min(year),
+                         max=max(year),
+                         value=c(min(year),max(year))
+                         ),
+             selectizeInput("features2",
+                            h4("Stock:"),
+                            levels(as.factor(stock)),
+                            selected=unique(stock)[1],
+                            multiple=T,
+                            options=list(plugins=list("remove_button","drag_drop"))
+                            ),
+             selectizeInput("features4",
+                            h4("Scenarios:"),
+                            levels(as.factor(strategias)),
+                            selected=unique(strategias)[1],
+                            multiple=T,
+                            options=list(plugins=list("remove_button","drag_drop"))
+                            ),
+              width=4
+              ), #cierra box
+          #--------------------
+          # FIGURA
+          #--------------------
+          box(
+             plotOutput("correlation_plot3"),
+             width=8
+             ) # cierra box
+           ) # cierra fluixRow
+         ), # cierra tabPanel
                                    
-                                   tabPanel("Time series",
-                                            "xxx",
-                                            
-                                            fluidRow(
-                                              
-                                              box(
-                                                
-                                                sliderInput("slider",h4("Years:"),min=min(year),max=max(year),value=c(min(year),max(year))),
-                                                
-                                                selectizeInput("features2",h4("Stock:"),
-                                                               levels(as.factor(stock)),
-                                                               selected=unique(stock)[1],
-                                                               multiple=T,
-                                                               options=list(plugins=list("remove_button","drag_drop"))),
-                                                
-                                                selectizeInput("features3",h4("Indicators:"),
-                                                               levels(as.factor(indicadores)),
-                                                               selected=unique(indicadores)[1],
-                                                               multiple=T,
-                                                               options=list(plugins=list("remove_button","drag_drop"))),
-                                                
-                                                selectizeInput("features4",h4("Scenarios:"),
-                                                               levels(as.factor(strategias)),
-                                                               selected=unique(strategias)[1],
-                                                               multiple=T,
-                                                               options=list(plugins=list("remove_button","drag_drop"))),
-                                                width=4
-                                              ),
-                                              
-                                              box(
-                                                
-                                                plotOutput("correlation_plot"),width=8
-                                                
-                                              )
-                                            )
-                                   ),
-                                   
-                                   tabPanel("Area plot",
-                                            "",
-                                            
-                                            fluidRow(
-                                              
-                                              box(
-                                                
-                                                sliderInput("slider",h4("Years:"),min=min(year),max=max(year),value=c(min(year),max(year))),
-                                                
-                                                selectizeInput("features2",h4("Stock:"),
-                                                               levels(as.factor(stock)),
-                                                               selected=unique(stock)[1],
-                                                               multiple=T,
-                                                               options=list(plugins=list("remove_button","drag_drop"))),
-                                                
-                                                selectizeInput("features3",h4("Indicators:"),
-                                                               levels(as.factor(indicadores)),
-                                                               selected=unique(indicadores)[1],
-                                                               multiple=T,
-                                                               options=list(plugins=list("remove_button","drag_drop"))),
-                                                
-                                                selectizeInput("features4",h4("Scenarios:"),
-                                                               levels(as.factor(strategias)),
-                                                               selected=unique(strategias)[1],
-                                                               multiple=T,
-                                                               options=list(plugins=list("remove_button","drag_drop"))),
-                                                width=4
-                                              ),
-                                              
-                                              box(
-                                                
-                                                plotOutput("correlation_plot2"),width=8
-                                                
-                                              )
-                                            )),
-                                   
-                                   tabPanel("Kobeplot",
-                                            "Kobe plots provide the trajectory of SSB and F pairs (in median) over time.
-                                    They divide the plot area in different quadrants defined by the ratio between SSB and F
-                                    and their corresponding MSY values. The green quadrant represents the area where the 
-                                    stock is sustainably exploited (SSB>Bmsy and F Bmsy and F>Fmsy), and the red the
-                                    area where the stock is over-exploited and over-fished (SSBFmsy).",
-                                            
-                                            fluidRow(
-                                              
-                                              box(
-                                                
-                                                sliderInput("slider",h4("Years:"),min=min(year),max=max(year),value=c(min(year),max(year))),
-                                                
-                                                selectizeInput("features2",h4("Stock:"),
-                                                               levels(as.factor(stock)),
-                                                               selected=unique(stock)[1],
-                                                               multiple=T,
-                                                               options=list(plugins=list("remove_button","drag_drop"))),
-                                                
-                                                selectizeInput("features4",h4("Scenarios:"),
-                                                               levels(as.factor(strategias)),
-                                                               selected=unique(strategias)[1],
-                                                               multiple=T,
-                                                               options=list(plugins=list("remove_button","drag_drop"))),
-                                                width=4
-                                              ),
-                                              
-                                              box(
-                                                
-                                                plotOutput("correlation_plot3"),width=8
-                                                
-                                              )
-                                            )),
-                                   
-                                   tabPanel("Spider",
+      tabPanel("Spider",
                                             "Spider plots allow to compare the (median) value of an indicator along a big set of 
                                     scenarios for a certain year. The scenarios correspond with the edges of the web. 
                                     The value is standardized comparing the value in one year with a base year (year option) 

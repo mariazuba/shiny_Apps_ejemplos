@@ -7,40 +7,87 @@ library(ggplot2)
 library(dplyr)
 library(reshape2)
 library(tidyverse)
+
+
+#--------------------------------------------------------------------------
 # generando data.frame para figuras
+#--------------------------------------------------------------------------
+# years
 
 year  <- seq(2000,2030)
 nyear <- length(year)
 
 # stock
 
-stock<-c("Anch_1","Anch_2","Anch_3")
+stock  <- c("Anch_1","Anch_2","Anch_3")
+nstock <- length(stock)
 
-Stocks <- rep(stock[1],nyear)
 
 # scenarios
 
-sce<-c("MO_1","MO_2","MO_3","HCR_1","HCR_2","HCR_3","HCR_4")
-
-Sce   <- rep(sce[1],nyear)
-
-#indicators
-
-ind<-c("catch","rec","ssb","ft")
+sce  <- c("MO_1","MO_2","MO_3")
+nsce <- length(sce)
 
 
-Catch <- sample(100:15000,nyear,replace=F)
-           
-Recl  <- sample(1000:50000,nyear,replace=F)
+# indicators
 
-Ssb   <- sample(10000:35000,nyear,replace=F)
+ind  <- c("Catch","Recl","Ssb","Ft")
+nind <- length(ind)
 
-Ft    <- runif(nyear,0.01,3) %>% round(2)
+# datos simulados 
 
+Years  <- rep(
+            year,nyear*nstock*nsce
+            )
+Stocks <- gl(
+            nstock,nyear*nsce,length=nsce*nstock*nyear,labels=stock
+            )
+Sce    <- gl(
+            nsce, nstock*nyear,length=nsce*nstock*nyear,labels=sce
+            )
+Catch  <- c(sample(100:15000,nyear,replace=F), # "Anch_1" - "MO_1"
+           sample(100:1500,nyear,replace=F),   # "Anch_2" - "MO_1"
+           sample(100:35000,nyear,replace=F),  # "Anch_3" - "MO_1"
+           sample(100:15000,nyear,replace=F),  # "Anch_1" - "MO_2"
+           sample(100:1500,nyear,replace=F),   # "Anch_2" - "MO_2"
+           sample(100:35000,nyear,replace=F),  # "Anch_3" - "MO_2"
+           sample(100:15000,nyear,replace=F),  # "Anch_1" - "MO_3"
+           sample(100:1500,nyear,replace=F),   # "Anch_2" - "MO_3"
+           sample(100:35000,nyear,replace=F)   # "Anch_3" - "MO_3"
+           )
+Recl  <- c(sample(1000:50000,nyear,replace=F), # "Anch_1" - "MO_1"
+           sample(1000:25000,nyear,replace=F), # "Anch_2" - "MO_1"
+           sample(1000:80000,nyear,replace=F), # "Anch_3" - "MO_1"
+           sample(1000:50000,nyear,replace=F), # "Anch_1" - "MO_2"
+           sample(1000:25000,nyear,replace=F), # "Anch_2" - "MO_2"
+           sample(1000:80000,nyear,replace=F), # "Anch_3" - "MO_2"
+           sample(1000:50000,nyear,replace=F), # "Anch_1" - "MO_3"
+           sample(1000:25000,nyear,replace=F), # "Anch_2" - "MO_3"
+           sample(1000:80000,nyear,replace=F)  # "Anch_3" - "MO_3"
+           )
+Ssb   <- c(sample(10000:35000,nyear,replace=F), # "Anch_1" - "MO_1"
+           sample(10000:15000,nyear,replace=F), # "Anch_2" - "MO_1"
+           sample(10000:85000,nyear,replace=F), # "Anch_3" - "MO_1"
+           sample(10000:35000,nyear,replace=F), # "Anch_1" - "MO_2"
+           sample(10000:15000,nyear,replace=F), # "Anch_2" - "MO_2"
+           sample(10000:85000,nyear,replace=F), # "Anch_3" - "MO_2"
+           sample(10000:35000,nyear,replace=F), # "Anch_1" - "MO_3"
+           sample(10000:15000,nyear,replace=F), # "Anch_2" - "MO_3"
+           sample(10000:85000,nyear,replace=F)  # "Anch_3" - "MO_3"
+           )
+Ft    <- c(runif(nyear,0.01,3), # "Anch_1" - "MO_1"
+           runif(nyear,0.01,5), # "Anch_2" - "MO_1"
+           runif(nyear,0.01,1), # "Anch_3" - "MO_1"
+           runif(nyear,0.01,3), # "Anch_1" - "MO_2"
+           runif(nyear,0.01,5), # "Anch_2" - "MO_2"
+           runif(nyear,0.01,1), # "Anch_3" - "MO_2"
+           runif(nyear,0.01,3), # "Anch_1" - "MO_3"
+           runif(nyear,0.01,5), # "Anch_2" - "MO_3"
+           runif(nyear,0.01,1)  # "Anch_3" - "MO_3"
+           ) %>% round(2)
 
-
-Dat<-data.frame(year,Stocks,Sce,Catch,Recl,Ssb,Ft) %>% 
-     melt(id=c("year","Stocks","Sce"))
+Dat<-data.frame(Years,Stocks,Sce,Catch,Recl,Ssb,Ft) %>% 
+     melt(id=c("Years","Stocks","Sce"))
 
 yproy <- 2020
 
@@ -79,16 +126,16 @@ shinyServer(function(input, output) {
     #-------------------
     # Tab Time series
     #-------------------
-    output$value <- renderPrint({ input$features2 })
     
-    output$correlation_plot <- renderPlot({
+    output$timeserie <- renderPlot({
       
-      Dat %>% #filter(variable=="Catch") %>% 
+      Dat %>% 
+        filter(Stocks %in% input$features2 & variable %in% input$features3 )  %>% 
       ggplot()+
-        geom_line(aes(x=year,y=value,color=Sce))+
+        geom_line(aes(x=Years,y=value,color=Sce))+
         geom_vline(aes(xintercept=yproy),color="grey",linetype="dashed",lwd=1)+
         ylab("")+xlab("Year")+xlim(input$slider)+
-        #facet_wrap(~ variable + Stocks, ncol=2, scales="free_y")+
+        #facet_wrap(~ Stocks + variable , ncol=3, scales="free_y")+
         facet_grid(variable ~ Stocks, scales="free")+
         theme_bw()+
         theme(strip.text=element_text(size=16),
