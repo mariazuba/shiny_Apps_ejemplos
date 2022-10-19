@@ -130,9 +130,10 @@ shinyServer(function(input, output) {
     output$timeserie <- renderPlot({
       
       Dat %>% 
-        filter(Stocks %in% input$features2 & variable %in% input$features3 )  %>% 
-      ggplot()+
-        geom_line(aes(x=Years,y=value,color=Sce))+
+        filter(Stocks %in% input$features2 & 
+               variable %in% input$features3)  %>% 
+      ggplot(aes(x=Years,y=value,group=interaction(Sce),col=Sce))+
+        geom_line()+
         geom_vline(aes(xintercept=yproy),color="grey",linetype="dashed",lwd=1)+
         ylab("")+xlab("Year")+xlim(input$slider)+
         #facet_wrap(~ Stocks + variable , ncol=3, scales="free_y")+
