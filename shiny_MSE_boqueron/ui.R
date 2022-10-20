@@ -32,10 +32,8 @@ dashboardPage(
       menuItem("About",tabName = "about",icon=icon("fish")
       ), # cierra menuItem
       menuItem("Simulaciones",tabName = "iris",icon=icon("fish"),startExpanded = F,
-         menuSubItem("Stocks",tabName = "iris2"),
-         menuSubItem("Fleets",tabName = "iris3"),
-         menuSubItem("Fleets and stocks",tabName = "iris4"),
-         menuSubItem("Summary",tabName = "iris5"),
+         menuSubItem("Modelos Operativos",tabName = "iris2"),
+         menuSubItem("Estrategias de gestión",tabName = "iris5"),
          menuSubItem("Advice",tabName = "iris6")
          ,selected = T
       ) # cierra menuItem
@@ -85,8 +83,12 @@ dashboardPage(
 #-----------------
 # TIME SERIES   
 #-----------------
-      tabPanel("Time series",
-      "Descripción de la figura",
+      tabPanel(h4("Time series"),
+      h4("Time series plots show the evolution of indicators over time. 
+      The indicator time series in each scenario is drawn with a different color.
+      Confidence intervals can also be added marking the corresponding option. 
+      Several indicators and stock, fleets or metiers (depending on the case) 
+      can be selected simultaneously and they are plotted in different facets"),
         fluidRow(
           #--------------------
           # PANEL DE SELECCION
@@ -137,8 +139,11 @@ dashboardPage(
  #-----------------
  # AREA PLOT   
  #-----------------
-      tabPanel("Area plot",
-        "",
+      tabPanel(h4("Area plot"),
+        h4("Area plots show the composition, in median, of an specific indicator 
+        (catch, biomass...) over time. Each coloured area corresponds with one 
+        stock, fleet or metier (depending on the case). When several indicators 
+        are selected simultaneously they are plotted in different facets."),
         fluidRow(
           #--------------------
           # PANEL DE SELECCION
@@ -177,20 +182,21 @@ dashboardPage(
           # FIGURA
           #--------------------         
           box(
-           plotOutput("correlation_plot2"),
+           plotOutput("areaplot"),
            width=8
             ) # cierra box
           ) # cierra fluixRow
         ), # cierra tabPanel
+
 #-----------------
 # KOBE PLOT
 #-----------------
-      tabPanel("Kobeplot",
-        "Kobe plots provide the trajectory of SSB and F pairs (in median) over time.
+      tabPanel(h4("Kobeplot"),
+        h4("Kobe plots provide the trajectory of SSB and F pairs (in median) over time.
         They divide the plot area in different quadrants defined by the ratio between SSB and F
         and their corresponding MSY values. The green quadrant represents the area where the 
         stock is sustainably exploited (SSB>Bmsy and F Bmsy and F>Fmsy), and the red the
-        area where the stock is over-exploited and over-fished (SSBFmsy).",
+        area where the stock is over-exploited and over-fished (SSBFmsy)."),
         
         fluidRow(
           #--------------------
@@ -223,21 +229,21 @@ dashboardPage(
           # FIGURA
           #--------------------
           box(
-             plotOutput("correlation_plot3"),
+             plotOutput("kobe_plot"),
              width=8
              ) # cierra box
            ) # cierra fluixRow
          ), # cierra tabPanel
-                                   
-      tabPanel("Spider",
-                                            "Spider plots allow to compare the (median) value of an indicator along a big set of 
+                                 
+      tabPanel(h4("Spider"),
+                                           h4("Spider plots allow to compare the (median) value of an indicator along a big set of 
                                     scenarios for a certain year. The scenarios correspond with the edges of the web. 
                                     The value is standardized comparing the value in one year with a base year (year option) 
                                     or with a base scenario (scenario option). Thus, the dashed black line correspond with 
                                     the unit circle, lines outside the circle represent values higher than in the base year 
                                     or scenario and those inside the circle represent lower values. The variables used to draw 
                                     lines and facets can be exchange, so lines can correspond with stock or fleets (depending 
-                                    on the case) and facets with indicators or the other way around."
+                                    on the case) and facets with indicators or the other way around.")
                                    ))),
                           
                           tabItem(tabName="iris3",
